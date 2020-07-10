@@ -9,10 +9,11 @@ board_length_units = 8
 unit_size = board_length_pixels / board_length_units
 
 board = [[0 for i in range(board_length_units)] for i in range(board_length_units)]
+white_pieces = []
+black_pieces = []
 left_mouse_key = 1
 scroll_mouse_key = 2
 right_mouse_key = 3
-
 
 
 class COLOR(Enum):
@@ -38,9 +39,25 @@ def setup_game():
     pygame.display.set_caption("Game")
     screen.fill(COLOR.BLACK.value)
     init_board(screen)
+    init_pieces(screen)
     pygame.display.flip()
     return screen
 
+
+def init_pieces(screen):
+
+    color_list= list(COLOR)
+    color_list.remove(COLOR.BLACK)
+    color_list.remove(COLOR.WHITE)
+    for i in range(8):
+        white_pieces.append(game_piece.game_piece(color_list[i].value, COLOR.WHITE.value, unit_size, i, 7))
+    for i in range(8):
+        black_pieces.append(game_piece.game_piece(color_list[i].value, COLOR.BLACK.value, unit_size, 7-i))
+
+    for piece in white_pieces:
+        piece.draw(screen)
+    for piece in black_pieces:
+        piece.draw(screen)
 
 def init_board(screen):
     tile = game_tile.game_tile(COLOR.ORANGE.value, unit_size, 0)
@@ -99,9 +116,6 @@ def init_board(screen):
         tile.move(-1, 1)
         pygame.display.flip()
 
-    piece= game_piece.game_piece(COLOR.RED.value,unit_size ,4,0)
-    piece.draw(screen)
-
 
 def loop_game(screen):
     while True:
@@ -110,7 +124,7 @@ def loop_game(screen):
                 pygame.quit()
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == left_mouse_key:
                 x, y = (pygame.mouse.get_pos())
-                x = int(x/unit_size)
+                x = int(x / unit_size)
                 y = int(y / unit_size)
                 print(board[x][y].color)
 

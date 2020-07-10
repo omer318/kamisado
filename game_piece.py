@@ -4,15 +4,19 @@ tiles_in_row = 8
 
 
 class game_piece():
-    def __init__(self, color, unit_size, x=0, y=0):
+    def __init__(self, color, side_color, unit_size, x=0, y=0):
         self.x = x
         self.y = y
         self.radius = int((unit_size *0.8 ) / 2)
         self.color = color
+        self.side_color = side_color
         self.occupied = False
         self.unit_size = int(unit_size)
 
     def draw(self, screen):
+        pygame.draw.circle(screen, self.side_color,
+                           (int((self.x + 0.5) * self.unit_size), int((self.y + 0.5) * self.unit_size)),
+                           self.radius+3)
         pygame.draw.circle(screen, self.color, (int((self.x + 0.5) * self.unit_size), int((self.y + 0.5) * self.unit_size)),
                            self.radius)
         pygame.display.flip()
