@@ -45,73 +45,76 @@ def setup_game():
 
 
 def init_pieces(screen):
-
-    color_list= list(COLOR)
+    color_list = list(COLOR)
     color_list.remove(COLOR.BLACK)
     color_list.remove(COLOR.WHITE)
     for i in range(8):
-        white_pieces.append(game_piece.game_piece(color_list[i].value, COLOR.WHITE.value, unit_size, i, 7))
+        white_pieces.append(game_piece.game_piece(screen, color_list[i].value, COLOR.WHITE.value, unit_size, i, 7))
+        board[i][7].occupy(white_pieces[i])
+
     for i in range(8):
-        black_pieces.append(game_piece.game_piece(color_list[i].value, COLOR.BLACK.value, unit_size, 7-i))
+        black_pieces.append(game_piece.game_piece(screen, color_list[i].value, COLOR.BLACK.value, unit_size, 7 - i))
+        board[0][7-i].occupy(black_pieces[i])
 
     for piece in white_pieces:
-        piece.draw(screen)
+        piece.draw()
     for piece in black_pieces:
-        piece.draw(screen)
+        piece.draw()
+
 
 def init_board(screen):
-    tile = game_tile.game_tile(COLOR.ORANGE.value, unit_size, 0)
+    tile = game_tile.game_tile(screen, COLOR.ORANGE.value, unit_size, 0)
     for i in range(8):
-        tile.draw(screen)
+        tile.draw()
         board[tile.x][tile.y] = tile
         tile.move(1, 1)
         pygame.display.flip()
 
-    tile = game_tile.game_tile(COLOR.BLUE.value, unit_size, 1)
+    tile = game_tile.game_tile(screen, COLOR.BLUE.value, unit_size, 1)
     for i in range(8):
-        tile.draw(screen)
+        tile.draw()
         board[tile.x][tile.y] = tile
         tile.move(3, 1)
         pygame.display.flip()
 
-    tile = game_tile.game_tile(COLOR.PURPLE.value, unit_size, 2)
+    tile = game_tile.game_tile(screen, COLOR.PURPLE.value, unit_size, 2)
     for i in range(8):
-        tile.draw(screen)
+        tile.draw()
         board[tile.x][tile.y] = tile
         tile.move(5, 1)
         pygame.display.flip()
 
-    tile = game_tile.game_tile(COLOR.PINK.value, unit_size, 3)
+    tile = game_tile.game_tile(screen, COLOR.PINK.value, unit_size, 3)
     for i in range(8):
-        tile.draw(screen)
+        tile.draw()
         board[tile.x][tile.y] = tile
         tile.move(1, -1)
         pygame.display.flip()
 
-    tile = game_tile.game_tile(COLOR.YELLOW.value, unit_size, 4)
+    tile = game_tile.game_tile(screen, COLOR.YELLOW.value, unit_size, 4)
     for i in range(8):
-        tile.draw(screen)
+        tile.draw()
         board[tile.x][tile.y] = tile
         tile.move(1, 1)
         pygame.display.flip()
 
-    tile = game_tile.game_tile(COLOR.RED.value, unit_size, 5)
+    tile = game_tile.game_tile(screen, COLOR.RED.value, unit_size, 5)
     for i in range(8):
-        tile.draw(screen)
+        tile.draw()
         board[tile.x][tile.y] = tile
         tile.move(3, 1)
         pygame.display.flip()
 
-    tile = game_tile.game_tile(COLOR.GREEN.value, unit_size, 6)
+    tile = game_tile.game_tile(screen, COLOR.GREEN.value, unit_size, 6)
     for i in range(8):
-        tile.draw(screen)
+        tile.draw()
         board[tile.x][tile.y] = tile
         tile.move(5, 1)
         pygame.display.flip()
 
-    tile = game_tile.game_tile(COLOR.BROWN.value, unit_size, 7)
+    tile = game_tile.game_tile(screen, COLOR.BROWN.value, unit_size, 7)
     for i in range(8):
-        tile.draw(screen)
+        tile.draw()
         board[tile.x][tile.y] = tile
         tile.move(-1, 1)
         pygame.display.flip()
@@ -126,7 +129,8 @@ def loop_game(screen):
                 x, y = (pygame.mouse.get_pos())
                 x = int(x / unit_size)
                 y = int(y / unit_size)
-                print(board[x][y].color)
+                print(f"x:{x}, y:{y}")
+                print(board[x][y].get_game_piece().side_color)
 
 
 if __name__ == '__main__':
