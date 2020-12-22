@@ -1,3 +1,5 @@
+from math import floor
+
 import pygame
 import time
 from color import COLOR
@@ -26,11 +28,26 @@ def setup_game():
     return screen
 
 
+def detect_click(screen):
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+        if event.type == pygame.MOUSEBUTTONUP:
+            pos = pygame.mouse.get_pos()
+            return pos
+    return None
+
+
+
+def map_click(pos):
+    return tuple(map(lambda x: floor(x / 64), pos))
+
+
 def loop_game(screen):
     while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
+        pos = detect_click(screen)
+        if (pos != None):
+            print(map_click(pos))
 
 
 if __name__ == '__main__':
