@@ -26,3 +26,5 @@ class Board:
                 print(COLOR[(self.board[i][j]).upper()].value)
                 self.board[i][j] = GameTile(self.screen, self.unit_size, COLOR[(self.board[i][j]).upper()].value, i, j)
                 self.board[i][j].draw()
+                if i == 7 :
+

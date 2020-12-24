@@ -12,6 +12,7 @@ class GameTile:
         self.occupied = None
         self.screen = screen
         self.unit_size = unit_size
+        self.tile = pygame.Rect(self.x * self.unit_size, self.y * self.unit_size, self.unit_size, self.unit_size)
 
     def draw(self):
         pygame.draw.rect(self.screen, self.color, self.tile)
