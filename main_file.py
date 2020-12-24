@@ -38,7 +38,6 @@ def detect_click(screen):
     return None
 
 
-
 def map_click(pos):
     return tuple(map(lambda x: floor(x / 64), pos))
 
@@ -46,7 +45,7 @@ def map_click(pos):
 def loop_game(screen):
     while True:
         pos = detect_click(screen)
-        if (pos != None):
+        if pos is not None:
             print(map_click(pos))
 
 
