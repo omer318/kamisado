@@ -57,6 +57,8 @@ class Game:
 
     def apply_move(self, x, y):
         try:
+            if self.board.board[x][y].piece is not None:
+                raise GameException("OCCUPIED_TILE")
             self.board.board[self.selected_piece[0]][self.selected_piece[1]].piece.move(x, y)
             self.board.board[x][y].piece = self.board.board[self.selected_piece[0]][
                 self.selected_piece[1]].piece
