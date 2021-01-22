@@ -50,7 +50,7 @@ class Game:
                 x, y = map_click(pos)
                 print(f"x: {x}, y: {y}")
                 if self.selected_piece is None:
-                    if self.board.board[x][y].occupied is not None:
+                    if self.board.board[x][y].piece is not None:
                         self.board.board[x][y].select()
                         self.selected_piece = (x, y)
                 else:
@@ -59,13 +59,15 @@ class Game:
 
     def apply_move(self, x, y):
         try:
-            self.board.board[self.selected_piece[0]][self.selected_piece[1]].occupied.move(x, y)
-            self.board.board[x][y].occupied = self.board.board[self.selected_piece[0]][
-            self.selected_piece[1]].occupied
-            self.board.board[self.selected_piece[0]][self.selected_piece[1]].occupied = None
+            self.board.board[self.selected_piece[0]][self.selected_piece[1]].piece.move(x, y)
+            self.board.board[x][y].piece = self.board.board[self.selected_piece[0]][
+                self.selected_piece[1]].piece
+            self.board.board[self.selected_piece[0]][self.selected_piece[1]].piece = None
+            self.board.board[x][y].deselect()
             self.selected_piece = None
-            self.board.board[x][y].select()
         except Exception as e:
+            self.board.board[self.selected_piece[0]][self.selected_piece[1]].deselect()
+            self.selected_piece = None
             print(e)
 
 

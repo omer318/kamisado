@@ -12,7 +12,7 @@ class GamePiece:
         self.radius = int((unit_size * 0.8) / 2)
         self.color = color
         self.side_color = side_color
-        self.occupied = False
+        self.piece = False
         self.unit_size = int(unit_size)
         self.screen = screen
 
@@ -39,7 +39,13 @@ class GamePiece:
             raise Exception("Illegal Move")
 
     def select(self):
-        self.is_selected = not self.is_selected
+        print(f"Selecting the {COLOR(self.color).name.lower()} piece")
+        self.is_selected = True
+        self.draw()
+
+    def deselect(self):
+        print(f"Deselecting the {COLOR(self.color).name.lower()} piece")
+        self.is_selected = False
         self.draw()
 
     def is_forward(self, x, y):
