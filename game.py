@@ -28,6 +28,8 @@ class Game:
         self.screen = self.setup_game()
         self.selected_piece = None
         self.current_player = COLOR["WHITE"]
+        self.current_color = None
+        self.is_first_move = True
 
     def setup_game(self):
         screen = pygame.display.set_mode((self.board_length_pixels, self.board_length_pixels))
@@ -60,13 +62,16 @@ class Game:
         try:
             if self.board.board[x][y].piece is not None:
                 raise GameException("OCCUPIED_TILE")
-            if self.board.board[self.selected_piece[0]][self.selected_piece[1]].piece.side_color != self.current_player :
+            if self.board.board[self.selected_piece[0]][self.selected_piece[1]].piece.side_color != self.current_player:
                 raise GameException("WRONG_TURN")
+            if not self.is_first_move and self.board.board[self.selected_piece[0]][self.selected_piece[1]].piece.color != self.current_color:
+                raise GameException("WRONG_COLOR")
             self.board.board[self.selected_piece[0]][self.selected_piece[1]].piece.move(x, y)
             self.board.board[x][y].piece = self.board.board[self.selected_piece[0]][
                 self.selected_piece[1]].piece
             self.board.board[self.selected_piece[0]][self.selected_piece[1]].piece = None
             self.board.board[x][y].deselect()
+            self.current_color = self.board.board[x][y].color
             self.pass_turn()
         except GameException as e:
             print(e)
@@ -75,5 +80,7 @@ class Game:
             self.selected_piece = None
 
     def pass_turn(self):
+        if self.is_first_move:
+            self.is_first_move = False
         self.current_player = COLOR["BLACK"] if self.current_player == COLOR["WHITE"] else COLOR["WHITE"]
         print(f"{self.current_player.name.capitalize()} to move next")
