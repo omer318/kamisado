@@ -1,5 +1,5 @@
 import pygame
-import game_piece
+import gamepiece
 tiles_in_row = 8
 
 
@@ -15,4 +15,6 @@ class GameTile:
 
     def draw(self):
         pygame.draw.rect(self.screen, self.color, self.tile)
+        if self.occupied is not None:
+            self.occupied.draw()
         pygame.display.flip()

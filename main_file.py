@@ -14,7 +14,6 @@ board = None
 
 
 def main():
-    print(COLOR["BLUE"].value)
     screen = setup_game()
     loop_game(screen)
 

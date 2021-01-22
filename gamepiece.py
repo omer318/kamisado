@@ -3,8 +3,8 @@ import pygame
 tiles_in_row = 8
 
 
-class game_piece():
-    def __init__(self, screen, color, side_color, unit_size, x=0, y=0):
+class GamePiece:
+    def __init__(self, screen, unit_size, color, side_color,  x=0, y=0):
         self.is_selected = False
         self.x = x
         self.y = y

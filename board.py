@@ -1,6 +1,7 @@
 import pygame
 from color import COLOR
 from game_tile import GameTile
+from gamepiece import GamePiece
 
 
 class Board:
@@ -25,6 +26,11 @@ class Board:
             for j in range(len(self.board[i])):
                 print(COLOR[(self.board[i][j]).upper()].value)
                 self.board[i][j] = GameTile(self.screen, self.unit_size, COLOR[(self.board[i][j]).upper()].value, i, j)
-                self.board[i][j].draw()
-                if i == 7 :
+                if j == 0:
+                    self.board[i][j].occupied = GamePiece(self.screen, self.unit_size,
+                                                          self.board[i][j].color, COLOR["BLACK"].value, i, j)
+                if j == 7:
+                    self.board[i][j].occupied = GamePiece(self.screen, self.unit_size,
+                                                          self.board[i][j].color, COLOR["WHITE"].value, i, j)
 
+                self.board[i][j].draw()
