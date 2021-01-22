@@ -48,14 +48,17 @@ class Game:
             pos = detect_click()
             if pos is not None:
                 x, y = map_click(pos)
-                if self.selected_piece is None and self.board.board[x][y].occupied is not None:
-                    self.board.board[x][y].select()
-                    self.selected_piece = (x, y)
+                if self.selected_piece is None:
+                    if self.board.board[x][y].occupied is not None:
+                        self.board.board[x][y].select()
+                        self.selected_piece = (x, y)
                 else:
                     self.board.board[self.selected_piece[0]][self.selected_piece[1]].occupied.move(x, y)
-                    self.board.board[x][y].occupied = self.board.board[self.selected_piece[0]][self.selected_piece[1]].occupied
+                    self.board.board[x][y].occupied = self.board.board[self.selected_piece[0]][
+                        self.selected_piece[1]].occupied
                     self.board.board[self.selected_piece[0]][self.selected_piece[1]].occupied = None
                     self.selected_piece = None
+                    self.board.board[x][y].select()
                 self.update_game()
 
 
