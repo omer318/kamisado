@@ -26,7 +26,7 @@ class GamePiece:
         pygame.display.flip()
 
     def move(self, x, y):
-        if self.is_forward(x, y) :
+        if self.is_forward(x, y):
             print(f"Moving the {COLOR(self.color).name.lower()} piece to ({x}, {y}) forward")
             self.x = x
             self.y = y

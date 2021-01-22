@@ -1,5 +1,5 @@
 import pygame
-import gamePiece
+
 tiles_in_row = 8
 
 
