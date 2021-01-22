@@ -12,3 +12,6 @@ class COLOR(Enum):
     PURPLE = (104, 0, 104)
     BLUE = (0, 0, 153)
     ORANGE = (255, 255 / 2, 0)
+
+    def __eq__(self, other):
+        return self.value == other
