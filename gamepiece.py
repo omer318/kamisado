@@ -41,9 +41,5 @@ class GamePiece:
             y += tiles_in_row
 
     def select(self):
-        self.is_selected = True
-        self.draw()
-
-    def unselect(self):
-        self.is_selected = False
+        self.is_selected = not self.is_selected
         self.draw()

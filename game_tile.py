@@ -18,3 +18,9 @@ class GameTile:
         if self.occupied is not None:
             self.occupied.draw()
         pygame.display.flip()
+
+    def select(self):
+        try:
+            self.occupied.select()
+        except AttributeError:
+            return

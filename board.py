@@ -34,3 +34,8 @@ class Board:
                                                           self.board[i][j].color, COLOR["WHITE"].value, i, j)
 
                 self.board[i][j].draw()
+
+    def draw_board(self):
+        for i in range(len(self.board)):
+            for j in range(len(self.board[i])):
+                self.board[i][j].draw()
