@@ -1,7 +1,8 @@
 import pygame
 from math import floor
-from color import COLOR
+from enums import COLOR
 from board import Board
+from gameException import GameException
 
 
 def map_click(pos):
@@ -62,7 +63,8 @@ class Game:
             self.board.board[self.selected_piece[0]][self.selected_piece[1]].piece = None
             self.board.board[x][y].deselect()
             self.selected_piece = None
-        except Exception as e:
+        except GameException as e:
+            print(e)
             self.board.board[self.selected_piece[0]][self.selected_piece[1]].deselect()
             self.selected_piece = None
-            print(e)
+

@@ -1,5 +1,5 @@
 import pygame
-from color import COLOR
+from enums import COLOR
 from gameTile import GameTile
 from gamePiece import GamePiece
 

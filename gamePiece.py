@@ -1,5 +1,6 @@
 import pygame
-from color import COLOR
+from enums import COLOR
+from gameException import GameException
 
 tiles_in_row = 8
 
@@ -31,12 +32,12 @@ class GamePiece:
             self.x = x
             self.y = y
         elif self.is_diagonal(x, y):
-            print(f"Moving the {COLOR(self.color).name.lower()} piece to ({x}, {y}) diagonaly")
+            print(f"Moving the {COLOR(self.color).name.lower()} piece to ({x}, {y}) diagonally")
             self.x = x
             self.y = y
         else:
             print(f"NOT Moving the {COLOR(self.color).name.lower()} piece to ({x}, {y})")
-            raise Exception("Illegal Move")
+            raise GameException("illegal_move")
 
     def select(self):
         print(f"Selecting the {COLOR(self.color).name.lower()} piece")

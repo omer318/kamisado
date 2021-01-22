@@ -15,3 +15,9 @@ class COLOR(Enum):
 
     def __eq__(self, other):
         return self.value == other
+
+
+class GAME_EXCEPTION(Enum):
+    ILLEGAL_MOVE = "Pieces can move only straight forward or diagonally forward"
+    WRONG_TURN = "Players aren't allowed to play not in their turn"
+    OCCUPIED_TILE = "Pieces can't move on top of other pieces"
