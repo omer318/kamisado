@@ -1,7 +1,7 @@
 import pygame
 from color import COLOR
-from game_tile import GameTile
-from gamepiece import GamePiece
+from gameTile import GameTile
+from gamePiece import GamePiece
 
 
 class Board:

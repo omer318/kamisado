@@ -1,10 +1,7 @@
-from math import floor
-
 import pygame
-import time
+from math import floor
 from color import COLOR
 from board import Board
-from game_tile import GameTile
 
 
 def map_click(pos):
@@ -69,12 +66,3 @@ class Game:
             self.board.board[self.selected_piece[0]][self.selected_piece[1]].deselect()
             self.selected_piece = None
             print(e)
-
-
-def main():
-    game = Game(512, 8)
-    game.loop_game()
-
-
-if __name__ == '__main__':
-    main()
