@@ -24,7 +24,6 @@ class Board:
     def build_board(self):
         for i in range(len(self.board)):
             for j in range(len(self.board[i])):
-                print(COLOR[(self.board[i][j]).upper()].value)
                 self.board[i][j] = GameTile(self.screen, self.unit_size, COLOR[(self.board[i][j]).upper()].value, i, j)
                 if j == 0:
                     self.board[i][j].piece = GamePiece(self.screen, self.unit_size,

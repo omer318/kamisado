@@ -46,7 +46,7 @@ class Game:
             pos = detect_click()
             if pos is not None:
                 x, y = map_click(pos)
-                print(f"x: {x}, y: {y}")
+                print(f"Clicked on x: {x}, y: {y}")
                 if self.selected_piece is None:
                     if self.board.board[x][y].piece is not None:
                         self.board.board[x][y].select()

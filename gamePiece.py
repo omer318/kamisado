@@ -37,6 +37,8 @@ class GamePiece:
             self.y = y
         else:
             print(f"NOT Moving the {COLOR(self.color).name.lower()} piece to ({x}, {y})")
+            if self.x == x and self.y == y:
+                raise GameException("move_to_same_spot")
             raise GameException("illegal_move")
 
     def select(self):
