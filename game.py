@@ -27,6 +27,7 @@ class Game:
         self.unit_size = self.board_length_pixels / self.board_length_units
         self.screen = self.setup_game()
         self.selected_piece = None
+        self.current_player = COLOR["WHITE"]
 
     def setup_game(self):
         screen = pygame.display.set_mode((self.board_length_pixels, self.board_length_pixels))
@@ -59,14 +60,20 @@ class Game:
         try:
             if self.board.board[x][y].piece is not None:
                 raise GameException("OCCUPIED_TILE")
+            if self.board.board[self.selected_piece[0]][self.selected_piece[1]].piece.side_color != self.current_player :
+                raise GameException("WRONG_TURN")
             self.board.board[self.selected_piece[0]][self.selected_piece[1]].piece.move(x, y)
             self.board.board[x][y].piece = self.board.board[self.selected_piece[0]][
                 self.selected_piece[1]].piece
             self.board.board[self.selected_piece[0]][self.selected_piece[1]].piece = None
             self.board.board[x][y].deselect()
-            self.selected_piece = None
         except GameException as e:
             print(e)
             self.board.board[self.selected_piece[0]][self.selected_piece[1]].deselect()
+        finally:
             self.selected_piece = None
+            self.pass_turn()
 
+    def pass_turn(self):
+        self.current_player = COLOR["BLACK"] if self.current_player == COLOR["WHITE"] else COLOR["WHITE"]
+        print(f"{self.current_player.name.capitalize()} to move next")
