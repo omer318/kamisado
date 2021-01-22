@@ -67,12 +67,12 @@ class Game:
                 self.selected_piece[1]].piece
             self.board.board[self.selected_piece[0]][self.selected_piece[1]].piece = None
             self.board.board[x][y].deselect()
+            self.pass_turn()
         except GameException as e:
             print(e)
             self.board.board[self.selected_piece[0]][self.selected_piece[1]].deselect()
         finally:
             self.selected_piece = None
-            self.pass_turn()
 
     def pass_turn(self):
         self.current_player = COLOR["BLACK"] if self.current_player == COLOR["WHITE"] else COLOR["WHITE"]
