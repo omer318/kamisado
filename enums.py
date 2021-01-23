@@ -23,3 +23,4 @@ class GAME_EXCEPTION(Enum):
     WRONG_COLOR = "Only the piece which matches the color of the tile that the opponent played to can move"
     OCCUPIED_TILE = "Pieces can't move on top of other pieces"
     MOVE_TO_SAME_SPOT = "Pieces can't move to their current position"
+    OFF_THE_BOARD = "Pieces can't move outside of the board"

@@ -9,4 +9,6 @@ class Position:
         elif other is tuple:
             return self.x == other[0] and self.y == other[1]
 
+    def __str__(self):
+        return f"({self.x}, {self.y})"
 

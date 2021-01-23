@@ -38,3 +38,14 @@ class Board:
         for i in range(len(self.board)):
             for j in range(len(self.board[i])):
                 self.board[i][j].draw()
+
+    def get_tile_by_piece_color_and_side_color(self, color, side_color):
+        for i in range(len(self.board)):
+            for j in range(len(self.board[i])):
+                if self.board[i][j].piece is None:
+                    continue
+                if self.board[i][j].piece.color == color and self.board[i][j].piece.side_color == side_color:
+                    return self.board[i][j]
+
+    def get_piece_by_color_and_side_color(self, color, side_color):
+        return self.get_tile_by_piece_color_and_side_color(color, side_color).piece
