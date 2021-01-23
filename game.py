@@ -30,6 +30,7 @@ class Game:
         self.current_player = COLOR["WHITE"]
         self.current_color = None
         self.is_first_move = True
+        self.winner = None
 
     def setup_game(self):
         screen = pygame.display.set_mode((self.board_length_pixels, self.board_length_pixels))
@@ -57,6 +58,9 @@ class Game:
                 else:
                     self.apply_move(x, y)
                 self.update_game()
+                if self.winner is not None:
+                    break
+        print(f"{self.winner} Won!")
 
     def apply_move(self, x, y):
         try:
@@ -64,7 +68,8 @@ class Game:
                 raise GameException("OCCUPIED_TILE")
             if self.board.board[self.selected_piece[0]][self.selected_piece[1]].piece.side_color != self.current_player:
                 raise GameException("WRONG_TURN")
-            if not self.is_first_move and self.board.board[self.selected_piece[0]][self.selected_piece[1]].piece.color != self.current_color:
+            if not self.is_first_move and self.board.board[self.selected_piece[0]][
+                self.selected_piece[1]].piece.color != self.current_color:
                 raise GameException("WRONG_COLOR")
             self.board.board[self.selected_piece[0]][self.selected_piece[1]].piece.move(x, y)
             self.board.board[x][y].piece = self.board.board[self.selected_piece[0]][
@@ -72,6 +77,8 @@ class Game:
             self.board.board[self.selected_piece[0]][self.selected_piece[1]].piece = None
             self.board.board[x][y].deselect()
             self.current_color = self.board.board[x][y].color
+            if self.check_for_win():
+                self.winner = self.current_player.name
             self.pass_turn()
         except GameException as e:
             print(e)
@@ -84,3 +91,11 @@ class Game:
             self.is_first_move = False
         self.current_player = COLOR["BLACK"] if self.current_player == COLOR["WHITE"] else COLOR["WHITE"]
         print(f"{self.current_player.name.capitalize()} to move next")
+
+    def check_for_win(self):
+        for i in range(len(self.board.board)):
+            if self.board.board[i][7].piece is not None and self.board.board[i][7].piece.side_color == COLOR["BLACK"]:
+                return True
+            if self.board.board[i][0].piece is not None and self.board.board[i][0].piece.side_color == COLOR["WHITE"]:
+                return True
+        return False
