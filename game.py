@@ -2,6 +2,7 @@ import pygame
 from math import floor
 from enums import COLOR, GAME_EXCEPTION
 from board import Board
+from position import Position
 from gameException import GameException
 
 
@@ -52,7 +53,7 @@ class Game:
                 if self.selected_piece is None:
                     if self.board.board[x][y].piece is not None:
                         self.board.board[x][y].select()
-                        self.selected_piece = (x, y)
+                        self.selected_piece = Position(x, y)
                 else:
                     self.apply_move(x, y)
                 self.update_game()
@@ -63,10 +64,10 @@ class Game:
     def apply_move(self, x, y):
         try:
             self.is_legal_move(x, y)
-            self.board.board[self.selected_piece[0]][self.selected_piece[1]].piece.move(x, y)
-            self.board.board[x][y].piece = self.board.board[self.selected_piece[0]][
-                self.selected_piece[1]].piece
-            self.board.board[self.selected_piece[0]][self.selected_piece[1]].piece = None
+            self.board.board[self.selected_piece.x][self.selected_piece.y].piece.move(x, y)
+            self.board.board[x][y].piece = self.board.board[self.selected_piece.x][
+                self.selected_piece.y].piece
+            self.board.board[self.selected_piece.x][self.selected_piece.y].piece = None
             self.board.board[x][y].deselect()
             self.current_color = self.board.board[x][y].color
             if self.check_for_win():
@@ -74,7 +75,7 @@ class Game:
             self.pass_turn(x, y)
         except GameException as e:
             print(e)
-            self.board.board[self.selected_piece[0]][self.selected_piece[1]].deselect()
+            self.board.board[self.selected_piece.x][self.selected_piece.y].deselect()
         finally:
             self.selected_piece = None
 
@@ -97,12 +98,12 @@ class Game:
         return False
 
     def is_legal_move(self, x, y):
-        if self.selected_piece[0] == x and self.selected_piece[1] == y:
+        if self.selected_piece.x == x and self.selected_piece.y == y:
             raise GameException(GAME_EXCEPTION.MOVE_TO_SAME_SPOT)
         if self.board.board[x][y].piece is not None:
             raise GameException(GAME_EXCEPTION.ILLEGAL_MOVE)
-        if self.board.board[self.selected_piece[0]][self.selected_piece[1]].piece.side_color != self.current_player:
+        if self.board.board[self.selected_piece.x][self.selected_piece.y].piece.side_color != self.current_player:
             raise GameException(GAME_EXCEPTION.WRONG_TURN)
-        if self.board.board[self.selected_piece[0]][self.selected_piece[1]].piece.color != self.current_color:
+        if self.board.board[self.selected_piece.x][self.selected_piece.y].piece.color != self.current_color:
             if not self.is_first_move:
                 raise GameException(GAME_EXCEPTION.WRONG_COLOR)
