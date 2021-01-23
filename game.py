@@ -34,6 +34,7 @@ class Game:
         self.winner = None
 
     def setup_game(self):
+        print("-" * 36)
         screen = pygame.display.set_mode((self.board_length_pixels, self.board_length_pixels))
         pygame.display.set_caption("Game")
         screen.fill(COLOR.BLACK.value)
@@ -56,22 +57,23 @@ class Game:
                         self.selected_piece = Position(x, y)
                         self.show_available_moves()
                 else:
-                    self.apply_move(x, y)
-                    if self.is_position_blocked():
-                        print("-" * 36 + f"\n{self.current_player.name.capitalize()} is blocked.")
+                    if self.apply_move(x, y):
+                        if self.is_position_blocked():
+                            print(f"{self.current_player.name.capitalize()} is blocked.")
 
-                        next_color = self.board.get_tile_by_piece_color_and_side_color(self.board.board[x][y].color,
-                                                                                       self.current_player)
-                        self.current_color = next_color.color
-                        self.current_player = COLOR.BLACK if self.current_player == COLOR.WHITE else COLOR.WHITE
-                        print(f"{self.current_player.name.capitalize()} to move next" +
-                              f" with the {COLOR(self.current_color).name.lower()} piece.\n" + "-" * 36)
+                            next_color = self.board.get_tile_by_piece_color_and_side_color(self.board.board[x][y].color,
+                                                                                           self.current_player)
+                            self.current_color = next_color.color
+                            self.current_player = COLOR.BLACK if self.current_player == COLOR.WHITE else COLOR.WHITE
+                            print(f"{self.current_player.name.capitalize()} to move next" +
+                                  f" with the {COLOR(self.current_color).name.lower()} piece.\n" + "-" * 36)
                 self.update_game()
                 if self.winner is not None:
                     break
         print(f"{self.winner} Won!")
 
     def apply_move(self, x, y):
+        success = True
         try:
             self.is_legal_move(x, y)
             self.board.board[self.selected_piece.x][self.selected_piece.y].piece.move(x, y)
@@ -85,14 +87,17 @@ class Game:
         except GameException as e:
             print(e)
             self.board.board[self.selected_piece.x][self.selected_piece.y].deselect()
+            success = False
         finally:
             self.selected_piece = None
+            self.hide_available_moves()
+            return success
 
     def pass_turn(self, x, y):
         if self.is_first_move:
             self.is_first_move = False
 
-        print("-" * 36 + f"\n{self.current_player.name.capitalize()} moved the " +
+        print(f"{self.current_player.name.capitalize()} moved the " +
               f"{COLOR(self.board.board[x][y].piece.color).name.lower()} piece to "
               f"({x}, {y}).")
         self.current_player = self.get_opposite_color()
@@ -129,8 +134,13 @@ class Game:
 
     def show_available_moves(self):
         moves = self.get_available_moves(self.selected_piece.x, self.selected_piece.y)
-        if not moves:
-            print("There are no legal moves")
+        for move in moves:
+            self.board.board[move.x][move.y].mark()
+
+    def hide_available_moves(self):
+        moves = [Position(tile.x, tile.y) for row in self.board.board for tile in row]
+        for move in moves:
+            self.board.board[move.x][move.y].unmark()
 
     def get_available_moves(self, x, y):
         legal_moves = []

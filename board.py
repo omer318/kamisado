@@ -1,4 +1,3 @@
-import pygame
 from enums import COLOR
 from gameTile import GameTile
 from gamePiece import GamePiece
