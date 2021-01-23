@@ -50,7 +50,6 @@ class Game:
             pos = detect_click()
             if pos is not None:
                 x, y = map_click(pos)
-                print(f"Clicked on x: {x}, y: {y}")
                 if self.selected_piece is None:
                     if self.board.board[x][y].piece is not None:
                         self.board.board[x][y].select()
@@ -68,9 +67,9 @@ class Game:
                 raise GameException("OCCUPIED_TILE")
             if self.board.board[self.selected_piece[0]][self.selected_piece[1]].piece.side_color != self.current_player:
                 raise GameException("WRONG_TURN")
-            if not self.is_first_move and self.board.board[self.selected_piece[0]][
-                self.selected_piece[1]].piece.color != self.current_color:
-                raise GameException("WRONG_COLOR")
+            if self.board.board[self.selected_piece[0]][self.selected_piece[1]].piece.color != self.current_color:
+                if not self.is_first_move:
+                    raise GameException("WRONG_COLOR")
             self.board.board[self.selected_piece[0]][self.selected_piece[1]].piece.move(x, y)
             self.board.board[x][y].piece = self.board.board[self.selected_piece[0]][
                 self.selected_piece[1]].piece
@@ -79,18 +78,22 @@ class Game:
             self.current_color = self.board.board[x][y].color
             if self.check_for_win():
                 self.winner = self.current_player.name
-            self.pass_turn()
+            self.pass_turn(x, y)
         except GameException as e:
             print(e)
             self.board.board[self.selected_piece[0]][self.selected_piece[1]].deselect()
         finally:
             self.selected_piece = None
 
-    def pass_turn(self):
+    def pass_turn(self, x, y):
         if self.is_first_move:
             self.is_first_move = False
+        print(f"{self.current_player.name.capitalize()} moved the " +
+              f"{COLOR(self.board.board[x][y].piece.color).name.lower()} piece to "
+              f"({x}, {y}).")
         self.current_player = COLOR["BLACK"] if self.current_player == COLOR["WHITE"] else COLOR["WHITE"]
-        print(f"{self.current_player.name.capitalize()} to move next")
+        print(f"{self.current_player.name.capitalize()} to move next" +
+              f" with the {COLOR(self.current_color).name.lower()} piece.")
 
     def check_for_win(self):
         for i in range(len(self.board.board)):

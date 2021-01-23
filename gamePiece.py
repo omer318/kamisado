@@ -27,27 +27,19 @@ class GamePiece:
         pygame.display.flip()
 
     def move(self, x, y):
-        if self.is_forward(x, y):
-            print(f"Moving the {COLOR(self.color).name.lower()} piece to ({x}, {y}) forward")
-            self.x = x
-            self.y = y
-        elif self.is_diagonal(x, y):
-            print(f"Moving the {COLOR(self.color).name.lower()} piece to ({x}, {y}) diagonally")
+        if self.is_forward(x, y) or self.is_diagonal(x, y):
             self.x = x
             self.y = y
         else:
-            print(f"NOT Moving the {COLOR(self.color).name.lower()} piece to ({x}, {y})")
             if self.x == x and self.y == y:
                 raise GameException("move_to_same_spot")
             raise GameException("illegal_move")
 
     def select(self):
-        print(f"Selecting the {COLOR(self.color).name.lower()} piece")
         self.is_selected = True
         self.draw()
 
     def deselect(self):
-        print(f"Deselecting the {COLOR(self.color).name.lower()} piece")
         self.is_selected = False
         self.draw()
 
