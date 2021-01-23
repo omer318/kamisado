@@ -21,7 +21,8 @@ class GamePiece:
         pygame.draw.circle(self.screen, self.side_color,
                            (int((self.x + 0.5) * self.unit_size), int((self.y + 0.5) * self.unit_size)),
                            self.radius + (3 + int(self.is_selected) * 2))
-        pygame.draw.circle(self.screen, self.color,
+
+        pygame.draw.circle(self.screen, self.color.value,
                            (int((self.x + 0.5) * self.unit_size), int((self.y + 0.5) * self.unit_size)),
                            self.radius)
         pygame.display.flip()
@@ -31,8 +32,6 @@ class GamePiece:
             self.x = x
             self.y = y
         else:
-            if self.x == x and self.y == y:
-                raise GameException("move_to_same_spot")
             raise GameException("illegal_move")
 
     def select(self):
@@ -44,13 +43,13 @@ class GamePiece:
         self.draw()
 
     def is_forward(self, x, y):
-        if self.side_color == COLOR["WHITE"]:
+        if self.side_color == COLOR.WHITE:
             return self.x == x and self.y > y
-        if self.side_color == COLOR["BLACK"]:
+        if self.side_color == COLOR.BLACK:
             return self.x == x and self.y < y
 
     def is_diagonal(self, x, y):
-        if self.side_color == COLOR["WHITE"]:
+        if self.side_color == COLOR.WHITE:
             return self.y - y == abs(self.x - x) and self.y > y
-        if self.side_color == COLOR["BLACK"]:
+        if self.side_color == COLOR.BLACK:
             return y - self.y == abs(self.x - x) and self.y < y

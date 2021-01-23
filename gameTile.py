@@ -14,7 +14,7 @@ class GameTile:
         self.tile = pygame.Rect(self.x * self.unit_size, self.y * self.unit_size, self.unit_size, self.unit_size)
 
     def draw(self):
-        pygame.draw.rect(self.screen, self.color, self.tile)
+        pygame.draw.rect(self.screen, self.color.value, self.tile)
         if self.piece is not None:
             self.piece.draw()
         pygame.display.flip()

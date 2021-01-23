@@ -1,6 +1,6 @@
 import pygame
 from math import floor
-from enums import COLOR
+from enums import COLOR, GAME_EXCEPTION
 from board import Board
 from gameException import GameException
 
@@ -27,7 +27,7 @@ class Game:
         self.unit_size = self.board_length_pixels / self.board_length_units
         self.screen = self.setup_game()
         self.selected_piece = None
-        self.current_player = COLOR["WHITE"]
+        self.current_player = COLOR.WHITE
         self.current_color = None
         self.is_first_move = True
         self.winner = None
@@ -41,7 +41,6 @@ class Game:
         return screen
 
     def update_game(self):
-        self.screen.fill(COLOR.BLACK.value)
         self.board.draw_board()
         pygame.display.flip()
 
@@ -63,13 +62,7 @@ class Game:
 
     def apply_move(self, x, y):
         try:
-            if self.board.board[x][y].piece is not None:
-                raise GameException("OCCUPIED_TILE")
-            if self.board.board[self.selected_piece[0]][self.selected_piece[1]].piece.side_color != self.current_player:
-                raise GameException("WRONG_TURN")
-            if self.board.board[self.selected_piece[0]][self.selected_piece[1]].piece.color != self.current_color:
-                if not self.is_first_move:
-                    raise GameException("WRONG_COLOR")
+            self.is_legal_move(x, y)
             self.board.board[self.selected_piece[0]][self.selected_piece[1]].piece.move(x, y)
             self.board.board[x][y].piece = self.board.board[self.selected_piece[0]][
                 self.selected_piece[1]].piece
@@ -91,14 +84,25 @@ class Game:
         print(f"{self.current_player.name.capitalize()} moved the " +
               f"{COLOR(self.board.board[x][y].piece.color).name.lower()} piece to "
               f"({x}, {y}).")
-        self.current_player = COLOR["BLACK"] if self.current_player == COLOR["WHITE"] else COLOR["WHITE"]
+        self.current_player = COLOR.BLACK if self.current_player == COLOR.WHITE else COLOR.WHITE
         print(f"{self.current_player.name.capitalize()} to move next" +
               f" with the {COLOR(self.current_color).name.lower()} piece.")
 
     def check_for_win(self):
         for i in range(len(self.board.board)):
-            if self.board.board[i][7].piece is not None and self.board.board[i][7].piece.side_color == COLOR["BLACK"]:
+            if self.board.board[i][7].piece is not None and self.board.board[i][7].piece.side_color == COLOR.BLACK:
                 return True
-            if self.board.board[i][0].piece is not None and self.board.board[i][0].piece.side_color == COLOR["WHITE"]:
+            if self.board.board[i][0].piece is not None and self.board.board[i][0].piece.side_color == COLOR.WHITE:
                 return True
         return False
+
+    def is_legal_move(self, x, y):
+        if self.selected_piece[0] == x and self.selected_piece[1] == y:
+            raise GameException(GAME_EXCEPTION.MOVE_TO_SAME_SPOT)
+        if self.board.board[x][y].piece is not None:
+            raise GameException(GAME_EXCEPTION.ILLEGAL_MOVE)
+        if self.board.board[self.selected_piece[0]][self.selected_piece[1]].piece.side_color != self.current_player:
+            raise GameException(GAME_EXCEPTION.WRONG_TURN)
+        if self.board.board[self.selected_piece[0]][self.selected_piece[1]].piece.color != self.current_color:
+            if not self.is_first_move:
+                raise GameException(GAME_EXCEPTION.WRONG_COLOR)
