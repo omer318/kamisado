@@ -1,5 +1,5 @@
 import pygame
-from enums import COLOR
+from enums import COLOR, GAME_EXCEPTION
 from gameException import GameException
 
 tiles_in_row = 8
@@ -32,7 +32,7 @@ class GamePiece:
             self.x = x
             self.y = y
         else:
-            raise GameException("illegal_move")
+            raise GameException(GAME_EXCEPTION.ILLEGAL_MOVE)
 
     def select(self):
         self.is_selected = True
