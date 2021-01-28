@@ -16,9 +16,9 @@ class Board:
 
     def parse_board(self, board_file_path):
         with open(board_file_path, "r") as board_file:
-            raw = board_file.read().split("\n")
-        for i in range(len(raw)):
-            self.board.append(raw[i].split(" "))
+            row = board_file.read().split("\n")
+        for i in range(len(row)):
+            self.board.append(row[i].split(" "))
 
     def build_board(self):
         for i in range(len(self.board)):

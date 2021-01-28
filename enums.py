@@ -3,6 +3,7 @@ from enum import Enum
 
 class COLOR(Enum):
     WHITE = (255, 255, 255)
+    GRAY = (200, 200, 200)
     BLACK = (0, 0, 0)
     BROWN = (102, 51, 0)
     GREEN = (50, 153, 0)

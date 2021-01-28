@@ -1,3 +1,5 @@
+import os
+
 import pygame
 from math import floor
 from enums import COLOR, GAME_EXCEPTION
@@ -10,6 +12,7 @@ def detect_click():
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
+            quit()
         if event.type == pygame.MOUSEBUTTONUP:
             pos = pygame.mouse.get_pos()
             return pos
@@ -30,9 +33,10 @@ class Match:
         self.winner = None
 
     def setup_match(self):
+        os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (400, 5)
         print("-" * 36)
         screen = pygame.display.set_mode((self.board_length_pixels, self.board_length_pixels))
-        pygame.display.set_caption("Kamisado by mario318")
+        pygame.display.set_caption("Game")
         screen.fill(COLOR.BLACK.value)
         self.board = Board(screen, self.unit_size, "board.txt")
         pygame.display.flip()
@@ -67,6 +71,7 @@ class Match:
                 if self.winner is not None:
                     break
         print(f"{self.winner} Won!")
+        return self.winner
 
     def apply_move(self, x, y):
         success = True
