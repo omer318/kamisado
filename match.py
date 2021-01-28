@@ -6,10 +6,6 @@ from position import Position
 from gameException import GameException
 
 
-def map_click(pos):
-    return tuple(map(lambda x: floor(x / 64), pos))
-
-
 def detect_click():
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -20,37 +16,37 @@ def detect_click():
     return None
 
 
-class Game:
+class Match:
     def __init__(self, board_length_pixels, board_length_units):
         self.board = None
         self.board_length_pixels = board_length_pixels
         self.board_length_units = board_length_units
         self.unit_size = self.board_length_pixels / self.board_length_units
-        self.screen = self.setup_game()
+        self.screen = self.setup_match()
         self.selected_piece = None
         self.current_player = COLOR.WHITE
         self.current_color = None
         self.is_first_move = True
         self.winner = None
 
-    def setup_game(self):
+    def setup_match(self):
         print("-" * 36)
         screen = pygame.display.set_mode((self.board_length_pixels, self.board_length_pixels))
-        pygame.display.set_caption("Game")
+        pygame.display.set_caption("Kamisado by mario318")
         screen.fill(COLOR.BLACK.value)
         self.board = Board(screen, self.unit_size, "board.txt")
         pygame.display.flip()
         return screen
 
-    def update_game(self):
+    def update_match(self):
         self.board.draw_board()
         pygame.display.flip()
 
-    def loop_game(self):
+    def loop_match(self):
         while True:
             pos = detect_click()
             if pos is not None:
-                x, y = map_click(pos)
+                x, y = self.map_click(pos)
                 if self.selected_piece is None:
                     if self.board.board[x][y].piece is not None:
                         self.board.board[x][y].select()
@@ -67,7 +63,7 @@ class Game:
                             self.current_player = COLOR.BLACK if self.current_player == COLOR.WHITE else COLOR.WHITE
                             print(f"{self.current_player.name.capitalize()} to move next" +
                                   f" with the {COLOR(self.current_color).name.lower()} piece.\n" + "-" * 36)
-                self.update_game()
+                self.update_match()
                 if self.winner is not None:
                     break
         print(f"{self.winner} Won!")
@@ -85,7 +81,8 @@ class Game:
                 self.winner = self.current_player.name
             self.pass_turn(x, y)
         except GameException as e:
-            print(e)
+            if e.message != GameException(GAME_EXCEPTION.MOVE_TO_SAME_SPOT).message:
+                print(e)
             self.board.board[self.selected_piece.x][self.selected_piece.y].deselect()
             success = False
         finally:
@@ -194,3 +191,6 @@ class Game:
 
     def get_opposite_color(self):
         return COLOR.BLACK if self.current_player == COLOR.WHITE else COLOR.WHITE
+
+    def map_click(self, pos):
+        return tuple(map(lambda x: floor(x / self.unit_size), pos))

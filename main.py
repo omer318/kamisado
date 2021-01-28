@@ -1,9 +1,9 @@
-from game import Game
+from match import Match
 
 
 def main():
-    game = Game(512, 8)
-    game.loop_game()
+    match = Match(800, 8)
+    match.loop_match()
 
 
 if __name__ == '__main__':

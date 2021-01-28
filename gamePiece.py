@@ -10,7 +10,7 @@ class GamePiece:
         self.is_selected = False
         self.x = x
         self.y = y
-        self.radius = int((unit_size * 0.8) / 2)
+        self.radius = int((unit_size * 0.8) / 2.5)
         self.color = color
         self.side_color = side_color
         self.piece = False
@@ -20,11 +20,11 @@ class GamePiece:
     def draw(self):
         pygame.draw.circle(self.screen, self.side_color,
                            (int((self.x + 0.5) * self.unit_size), int((self.y + 0.5) * self.unit_size)),
-                           self.radius + (3 + int(self.is_selected) * 2))
+                           self.radius + 3)
 
         pygame.draw.circle(self.screen, self.color.value,
                            (int((self.x + 0.5) * self.unit_size), int((self.y + 0.5) * self.unit_size)),
-                           self.radius)
+                           self.radius - int(self.is_selected) * 4)
         pygame.display.flip()
 
     def move(self, x, y):
