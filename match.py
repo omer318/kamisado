@@ -6,6 +6,7 @@ from enums import COLOR, GAME_EXCEPTION
 from board import Board
 from position import Position
 from gameException import GameException
+from win import Win
 
 
 def detect_click():
@@ -20,7 +21,7 @@ def detect_click():
 
 
 class Match:
-    def __init__(self, board_length_pixels, board_length_units):
+    def __init__(self, board_length_pixels, board_length_units, sumo_pieces=[]):
         self.board = None
         self.board_length_pixels = board_length_pixels
         self.board_length_units = board_length_units
@@ -31,6 +32,7 @@ class Match:
         self.current_color = None
         self.is_first_move = True
         self.winner = None
+        self.sumo_pieces = sumo_pieces
 
     def setup_match(self):
         os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (400, 5)
@@ -39,6 +41,7 @@ class Match:
         pygame.display.set_caption("Game")
         screen.fill(COLOR.BLACK.value)
         self.board = Board(screen, self.unit_size, "board.txt")
+        self.init_sumo()
         pygame.display.flip()
         return screen
 
@@ -70,8 +73,9 @@ class Match:
                 self.update_match()
                 if self.winner is not None:
                     break
-        print(f"{self.winner} Won!")
-        return self.winner
+        print(f"{self.winner.name.capitalize()} Won with the {self.current_color.name.lower()} piece!")
+        return Win(self.winner, self.current_color,
+                   self.board.get_piece_by_color_and_side_color(self.current_color, self.winner).is_sumo)
 
     def apply_move(self, x, y):
         success = True
@@ -83,7 +87,7 @@ class Match:
             self.board.board[self.selected_piece.x][self.selected_piece.y].piece = None
             self.board.board[x][y].deselect()
             if self.check_for_win():
-                self.winner = self.current_player.name
+                self.winner = self.current_player
             self.pass_turn(x, y)
         except GameException as e:
             if e.message != GameException(GAME_EXCEPTION.MOVE_TO_SAME_SPOT).message:
@@ -199,3 +203,6 @@ class Match:
 
     def map_click(self, pos):
         return tuple(map(lambda x: floor(x / self.unit_size), pos))
+
+    def init_sumo(self):
+        pass

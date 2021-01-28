@@ -16,6 +16,7 @@ class GamePiece:
         self.piece = False
         self.unit_size = int(unit_size)
         self.screen = screen
+        self.is_sumo = False
 
     def draw(self):
         pygame.draw.circle(self.screen, self.side_color,

@@ -2,6 +2,8 @@ from match import Match
 from scoreboard import Scoreboard
 import multiprocessing
 
+from win import Win
+
 
 def start_match(q):
     q.put(Match(800, 8).loop_match())
@@ -12,20 +14,17 @@ def start_scoreboard(v):
 
 
 def main():
-    queue = multiprocessing.Queue()
-    value = multiprocessing.Value('d', 0)
+    match_queue = multiprocessing.Queue()
+    value = multiprocessing.Array('c', Win.SERIALIZED_LENGTH)
     scoreboard = multiprocessing.Process(target=start_scoreboard, args=(value,))
     scoreboard.start()
     while True:
-        match = multiprocessing.Process(target=start_match, args=(queue,))
+        match = multiprocessing.Process(target=start_match, args=(match_queue,))
         match.start()
         match.join()
-        result = queue.get()
-        queue.empty()
-        if result == 'WHITE':
-            value.value = 1
-        if result == 'BLACK':
-            value.value = 2
+        result = match_queue.get()
+        match_queue.empty()
+        value.value = result.serialize()
 
 
 if __name__ == '__main__':

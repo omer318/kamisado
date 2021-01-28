@@ -3,6 +3,7 @@ import os
 import pygame
 from enums import COLOR
 from textbox import Textbox
+from win import Win
 
 
 class Scoreboard:
@@ -34,12 +35,13 @@ class Scoreboard:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     quit()
-            if v.value == 1:
-                self.white_score += 1
-                self.white_textbox.update(f"White: {self.white_score}")
-                v.value = 0
-            if v.value == 2:
-                self.black_score += 1
-                self.black_textbox.update(f"Black: {self.black_score}")
-                v.value = 0
+            if v.value != b'':
+                win = Win.deserialize(v.value)
+                if win.get_winner() == "White":
+                    self.white_score += 1
+                    self.white_textbox.update(f"White: {self.white_score}")
+                if win.get_winner() == "Black":
+                    self.black_score += 1
+                    self.black_textbox.update(f"Black: {self.black_score}")
+                v.value = b''
             pygame.display.flip()
