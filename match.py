@@ -67,9 +67,16 @@ class Match:
                             next_color = self.board.get_tile_by_piece_color_and_side_color(self.board.board[x][y].color,
                                                                                            self.current_player)
                             self.current_color = next_color.color
-                            self.current_player = COLOR.BLACK if self.current_player == COLOR.WHITE else COLOR.WHITE
-                            print(f"{self.current_player.name.capitalize()} to move next" +
-                                  f" with the {COLOR(self.current_color).name.lower()} piece.\n" + "-" * 36)
+                            self.current_player = self.get_opposite_color()
+                            if self.is_position_blocked():
+                                print("---------------------------------\nDEADLOCK\n------------------------")
+                                self.win = Win(self.current_player, self.current_color,
+                                               self.board.get_piece_by_color_and_side_color(self.current_color,
+                                                                                            self.current_player).is_sumo)
+                            else:
+                                print(f"{self.current_player.name.capitalize()} to move next" +
+                                      f" with the {COLOR(self.current_color).name.lower()} piece.\n" + "-" * 36)
+
                 self.update_match()
                 if self.win is not None:
                     break
@@ -87,7 +94,8 @@ class Match:
             self.board.board[x][y].deselect()
             if self.check_for_win():
                 self.win = Win(self.current_player, self.current_color,
-                               self.board.get_piece_by_color_and_side_color(self.current_color, self.current_player).is_sumo)
+                               self.board.get_piece_by_color_and_side_color(self.current_color,
+                                                                            self.current_player).is_sumo)
             self.pass_turn(x, y)
         except GameException as e:
             if e.message != GameException(GAME_EXCEPTION.MOVE_TO_SAME_SPOT).message:
@@ -130,13 +138,15 @@ class Match:
             raise GameException(GAME_EXCEPTION.OFF_THE_BOARD)
         if self.selected_piece.x == x and self.selected_piece.y == y:
             raise GameException(GAME_EXCEPTION.MOVE_TO_SAME_SPOT)
-        if self.board.board[x][y].piece is not None:
-            raise GameException(GAME_EXCEPTION.ILLEGAL_MOVE)
         if self.board.board[self.selected_piece.x][self.selected_piece.y].piece.side_color != self.current_player:
             raise GameException(GAME_EXCEPTION.WRONG_TURN)
         if self.board.board[self.selected_piece.x][self.selected_piece.y].piece.color != self.current_color:
             if not self.is_first_move:
                 raise GameException(GAME_EXCEPTION.WRONG_COLOR)
+        if self.board.board[self.selected_piece.x][self.selected_piece.y].piece.is_sumo:
+            pass
+        if self.board.board[x][y].piece is not None:
+            raise GameException(GAME_EXCEPTION.ILLEGAL_MOVE)
 
     def show_available_moves(self):
         moves = self.get_available_moves(self.selected_piece.x, self.selected_piece.y)
@@ -151,51 +161,30 @@ class Match:
     def get_available_moves(self, x, y):
         legal_moves = []
         piece = self.board.board[x][y].piece
-        if piece.side_color == COLOR.WHITE:
-            # Move Up
-            for i in range(1, piece.y + 1):
-                try:
-                    self.is_legal_move(piece.x, piece.y - i)
-                    legal_moves.append(Position(piece.x, piece.y - i))
-                except GameException:
-                    break
-            # Move right diagonally
-            for i in range(1, min(piece.y, 7 - piece.x) + 1):
-                try:
-                    self.is_legal_move(piece.x + i, piece.y - i)
-                    legal_moves.append(Position(piece.x + i, piece.y - i))
-                except GameException:
-                    break
-            # Move left diagonally
-            for i in range(1, min(piece.y, piece.x) + 1):
-                try:
-                    self.is_legal_move(piece.x - i, piece.y - i)
-                    legal_moves.append(Position(piece.x - i, piece.y - i))
-                except GameException:
-                    break
-
-        if piece.side_color == COLOR.BLACK:
-            # Move down
-            for i in range(1, 7 - piece.y + 1):
-                try:
-                    self.is_legal_move(piece.x, piece.y + i)
-                    legal_moves.append(Position(piece.x, piece.y + i))
-                except GameException:
-                    break
-            # Move right diagonally
-            for i in range(1, min(7 - piece.y, 7 - piece.x) + 1):
-                try:
-                    self.is_legal_move(piece.x + i, piece.y + i)
-                    legal_moves.append(Position(piece.x + i, piece.y + i))
-                except GameException:
-                    break
-
-            for i in range(1, min(7 - piece.y, piece.x) + 1):
-                try:
-                    self.is_legal_move(piece.x - i, piece.y + i)
-                    legal_moves.append(Position(piece.x - i, piece.y + i))
-                except GameException:
-                    break
+        is_white = piece.side_color == COLOR.WHITE
+        x = piece.x
+        y = piece.y if is_white else 7 - piece.y
+        # Move Up
+        for i in range(1, y + 1):
+            try:
+                self.is_legal_move(piece.x, piece.y + (i * (-1 if is_white else 1)))
+                legal_moves.append(Position(piece.x, piece.y + (i * (-1 if is_white else 1))))
+            except GameException:
+                break
+        # Move right diagonally
+        for i in range(1, min(y, 7 - x) + 1):
+            try:
+                self.is_legal_move(piece.x + i, piece.y + (i * (-1 if is_white else 1)))
+                legal_moves.append(Position(piece.x + i, piece.y + (i * (-1 if is_white else 1))))
+            except GameException:
+                break
+        # Move left diagonally
+        for i in range(1, min(y, x) + 1):
+            try:
+                self.is_legal_move(piece.x - i, piece.y + (i * (-1 if is_white else 1)))
+                legal_moves.append(Position(piece.x - i, piece.y + (i * (-1 if is_white else 1))))
+            except GameException:
+                break
         return legal_moves
 
     def get_opposite_color(self):
