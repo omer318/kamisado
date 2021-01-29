@@ -21,6 +21,9 @@ class Win:
     def get_winner(self):
         return self.winner.name.capitalize()
 
+    def get_piece(self):
+        return self.piece.name.capitalize()
+
     def serialize(self):
         return f"{self.winner.name}:{rgb_to_hex(self.piece.value)}:{int(self.is_sumo_win)}".encode("ASCII")
 

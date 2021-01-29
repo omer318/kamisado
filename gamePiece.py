@@ -26,6 +26,10 @@ class GamePiece:
         pygame.draw.circle(self.screen, self.color.value,
                            (int((self.x + 0.5) * self.unit_size), int((self.y + 0.5) * self.unit_size)),
                            self.radius - int(self.is_selected) * 4)
+        if self.is_sumo:
+            pygame.draw.circle(self.screen, COLOR.DIAMOND.value,
+                               (int((self.x + 0.5) * self.unit_size), int((self.y + 0.5) * self.unit_size)),
+                               self.radius / 2)
         pygame.display.flip()
 
     def move(self, x, y):

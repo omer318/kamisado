@@ -22,7 +22,11 @@ class GameTile:
             self.piece.draw()
         if self.is_marked:
             pygame.draw.circle(self.screen, COLOR.BLACK.value,
-                               (int((self.x + 0.5) * self.unit_size), int((self.y + 0.5) * self.unit_size)), 4)
+                               (int((self.x + 0.5) * self.unit_size), int((self.y + 0.5) * self.unit_size)),
+                               (self.unit_size / 8)+2)
+            pygame.draw.circle(self.screen, COLOR.GRAY.value,
+                               (int((self.x + 0.5) * self.unit_size), int((self.y + 0.5) * self.unit_size)),
+                               self.unit_size/8)
         pygame.display.flip()
 
     def select(self):

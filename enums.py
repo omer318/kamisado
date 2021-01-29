@@ -3,7 +3,7 @@ from enum import Enum
 
 class COLOR(Enum):
     WHITE = (255, 255, 255)
-    GRAY = (200, 200, 200)
+    GRAY = (212, 212, 212)
     BLACK = (0, 0, 0)
     BROWN = (102, 51, 0)
     GREEN = (50, 153, 0)
@@ -12,10 +12,14 @@ class COLOR(Enum):
     PINK = (255, 104, 204)
     PURPLE = (104, 0, 104)
     BLUE = (0, 0, 153)
-    ORANGE = (255, 255 / 2, 0)
+    ORANGE = (255, 128, 0)
+    DIAMOND = (148, 255, 252)
 
     def __eq__(self, other):
         return self.value == other
+
+    def __hash__(self):
+        return int('%02x%02x%02x' % self.value, 16)
 
 
 class GAME_EXCEPTION(Enum):
